@@ -85,7 +85,8 @@ print(df_ground_truth.shape[0]==inputs.shape[0])
 print((df_ground_truth.event_id==inputs.wine_id).sum()==df_ground_truth.shape[0])
 
 gt_file_name = str('GT_Data_') + str(datetime.date.today())+str('.csv')
-gt_file_path = str('/domino/datasets/local/ground_truth_data/')+gt_file_name
+gt_file_path_name = str('/mnt/data/{}/WineQualityData.csv'.format(os.environ.get('DOMINO_PROJECT_NAME')))
+gt_file_path = gt_file_path_name+gt_file_name
 df_ground_truth.to_csv(gt_file_path, index=False)
 
 def s3_upload(local_file, bucket):
