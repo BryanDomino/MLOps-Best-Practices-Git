@@ -117,7 +117,7 @@ server <- function(input, output,session) {
     result <- prediction(input$feat1, input$feat2, input$feat3, input$feat4, input$feat5)
     print(result)
     
-    pred <- result$result[[1]][[1]]
+    pred <- result$result[[1]]
     modelVersion <- result$release$model_version_number
     responseTime <- result$model_time_in_ms
     output$summary <- renderText({paste0("Wine Quality estimate is ", round(pred,2))})
