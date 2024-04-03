@@ -43,6 +43,7 @@ df3 = pd.DataFrame({'id': df2.id,
        'alcohol': alcoholJitter,
        'quality': df2.quality
                    })
+df3=df3.astype({"is_red": int})
 
 #Grab between 50 and 500 random rows from jittered data
 df_inf = df3.sample(n = random.randint(50,100)).reset_index(drop=True)
@@ -76,7 +77,7 @@ for n in range(inputs.shape[0]):
     ),
         json=scoring_request
     )
-    results.append(response.json().get('result').get('prediction'))
+    results.append(response.json().get('result')[0])
     
 print('Scoring complete')
 
