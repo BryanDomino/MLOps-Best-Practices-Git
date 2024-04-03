@@ -68,7 +68,7 @@ response <- POST(
     body=toJSON(list(data=list(density = inpFeat1, 
                                volatile_acidity = inpFeat2,
                                chlorides = inpFeat3,
-                               is_red = inpFeat4,
+                               is_red = as.integer(inpFeat4),
                                alcohol = inpFeat5)), auto_unbox = TRUE),
     content_type("application/json")
   )
