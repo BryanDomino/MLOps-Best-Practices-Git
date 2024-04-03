@@ -114,7 +114,8 @@ server <- function(input, output,session) {
                       selected = paste0("pnlPredict", input$controller)
     )
     print(input)
-    result <- prediction(input$feat1, input$feat2, input$feat3, input$feat4, input$feat5)
+    result <- prediction(input$feat1, input$feat2, input$feat3, as.integer(input$feat4), input$feat5)
+    print("here are the results")
     print(result)
     
     pred <- result$result[[1]]
