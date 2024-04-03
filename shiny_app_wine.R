@@ -60,20 +60,18 @@ ui <- fluidPage(
  
 prediction <- function(inpFeat1,inpFeat2,inpFeat3,inpFeat4,inpFeat5) {
   
-print("in the fuction")
-    #### COPY FULL LINES 4-7 from R tab in Model APIS page over this line of code. (It's a simple copy and paste) ####
-url <- "https://se-demo.domino.tech:443/models/660d4f56399d9148750c3716/latest/model"
+#### COPY FULL LINES 4-7 from R tab in Model APIS page over this line of code. (It's a simple copy and paste) ####
+url <- "https://se-demo.domino.tech:443/models/65f1aa2fe1c0e22bf72279cb/latest/model"
 response <- POST(
   url,
- authenticate("7yQ8pczVs9LQFslKlKpg3DgSpN19G5KlqfMJWyd3OcWFNev8FEc8psmUV4mP6oeD", "7yQ8pczVs9LQFslKlKpg3DgSpN19G5KlqfMJWyd3OcWFNev8FEc8psmUV4mP6oeD", type = "basic"),   
+ authenticate("1rH1VskniA4xeLonhleJNIKES5iPnZ80ciqu9oLfKySkQduk6oS4U1CxaKe4hFSP", "1rH1VskniA4xeLonhleJNIKES5iPnZ80ciqu9oLfKySkQduk6oS4U1CxaKe4hFSP", type = "basic"),   
     body=toJSON(list(data=list(density = inpFeat1, 
                                volatile_acidity = inpFeat2,
                                chlorides = inpFeat3,
-                               is_red = as.integer(inpFeat4),
+                               is_red = inpFeat4,
                                alcohol = inpFeat5)), auto_unbox = TRUE),
     content_type("application/json")
   )
-    print("after the call")
   
   str(content(response))
   
@@ -116,11 +114,10 @@ server <- function(input, output,session) {
                       selected = paste0("pnlPredict", input$controller)
     )
     print(input)
-    result <- prediction(input$feat1, input$feat2, input$feat3, as.integer(input$feat4), input$feat5)
-    print("here are the results")
+    result <- prediction(input$feat1, input$feat2, input$feat3, input$feat4, input$feat5)
     print(result)
     
-    pred <- result$result[[1]]
+    pred <- result$result[[1]][[1]]
     modelVersion <- result$release$model_version_number
     responseTime <- result$model_time_in_ms
     output$summary <- renderText({paste0("Wine Quality estimate is ", round(pred,2))})
