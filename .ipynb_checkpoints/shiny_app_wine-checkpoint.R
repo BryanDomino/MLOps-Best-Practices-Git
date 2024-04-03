@@ -60,7 +60,8 @@ ui <- fluidPage(
  
 prediction <- function(inpFeat1,inpFeat2,inpFeat3,inpFeat4,inpFeat5) {
   
-#### COPY FULL LINES 4-7 from R tab in Model APIS page over this line of code. (It's a simple copy and paste) ####
+print("in the fuction")
+    #### COPY FULL LINES 4-7 from R tab in Model APIS page over this line of code. (It's a simple copy and paste) ####
 url <- "https://se-demo.domino.tech:443/models/660d4f56399d9148750c3716/latest/model"
 response <- POST(
   url,
@@ -72,6 +73,7 @@ response <- POST(
                                alcohol = inpFeat5)), auto_unbox = TRUE),
     content_type("application/json")
   )
+    print("after the call")
   
   str(content(response))
   
