@@ -61,10 +61,10 @@ ui <- fluidPage(
 prediction <- function(inpFeat1,inpFeat2,inpFeat3,inpFeat4,inpFeat5) {
   
 #### COPY FULL LINES 4-7 from R tab in Model APIS page over this line of code. (It's a simple copy and paste) ####
-url <- "https://se-demo.domino.tech:443/models/65f1aa2fe1c0e22bf72279cb/latest/model"
+url <- "https://se-demo.domino.tech:443/models/660d4f56399d9148750c3716/latest/model"
 response <- POST(
   url,
- authenticate("1rH1VskniA4xeLonhleJNIKES5iPnZ80ciqu9oLfKySkQduk6oS4U1CxaKe4hFSP", "1rH1VskniA4xeLonhleJNIKES5iPnZ80ciqu9oLfKySkQduk6oS4U1CxaKe4hFSP", type = "basic"),   
+ authenticate("7yQ8pczVs9LQFslKlKpg3DgSpN19G5KlqfMJWyd3OcWFNev8FEc8psmUV4mP6oeD", "7yQ8pczVs9LQFslKlKpg3DgSpN19G5KlqfMJWyd3OcWFNev8FEc8psmUV4mP6oeD", type = "basic"),   
     body=toJSON(list(data=list(density = inpFeat1, 
                                volatile_acidity = inpFeat2,
                                chlorides = inpFeat3,
