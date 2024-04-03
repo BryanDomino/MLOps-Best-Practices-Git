@@ -12,6 +12,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 import os
 import mlflow
 import mlflow.h2o
+from mlflow.models.signature import infer_signature
 
 
 #Set train test split to 70
