@@ -66,6 +66,8 @@ with mlflow.start_run():
     print("R2 Score: ", round(r2_score(y_test, preds),3))
     print("MSE: ", round(mean_squared_error(y_test, preds),3))
     
+    mlflow.log_param("learning_rate", 0.15)
+    mlflow.log_param("n_estimators", 75)
     # Save the metrics in MLFlow
     mlflow.log_metric("R2", round(r2_score(y_test, preds),3))
     mlflow.log_metric("MSE", round(mean_squared_error(y_test,preds),3))
