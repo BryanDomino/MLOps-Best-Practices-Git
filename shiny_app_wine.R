@@ -40,7 +40,7 @@ ui <- fluidPage(
                    value=1),
       numericInput(inputId="feat5",
                    label='alcohol', 
-                   value=10),
+                   value=10.1),
       actionButton("predict", "Predict")
     ),
     
