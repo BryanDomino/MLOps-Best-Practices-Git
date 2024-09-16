@@ -70,25 +70,25 @@ for n in range(inputs.shape[0]):
         scoring_request = {'data' : setup_dict}
         
         
-    response = requests.post("https://se-demo.domino.tech:443/models/660d4f56399d9148750c3716/latest/model",
+    response = requests.post("https://demo2.dominodatalab.com:443/models/66e81d8e276d7e51a2b146f4/latest/model",
     auth=(
-        "7yQ8pczVs9LQFslKlKpg3DgSpN19G5KlqfMJWyd3OcWFNev8FEc8psmUV4mP6oeD",
-        "7yQ8pczVs9LQFslKlKpg3DgSpN19G5KlqfMJWyd3OcWFNev8FEc8psmUV4mP6oeD"
+        "KTEc7Yx0K31feWe0CnEgIVPFf0YpManqCJYx8POjki72CaorwdTjCwO0jZujkj6L",
+        "KTEc7Yx0K31feWe0CnEgIVPFf0YpManqCJYx8POjki72CaorwdTjCwO0jZujkj6L"
     ),
         json=scoring_request
     )
     results.append(response.json().get('result')[0])
     
-print('Scoring complete')
+#print('Scoring complete')
 
-df_ground_truth=df_inf[['wine_id', 'quality']].rename({'wine_id': 'event_id', 'quality' : 'quality_GT'}, axis=1)
-print(df_ground_truth.shape[0]==inputs.shape[0])
-print((df_ground_truth.event_id==inputs.wine_id).sum()==df_ground_truth.shape[0])
+#df_ground_truth=df_inf[['wine_id', 'quality']].rename({'wine_id': 'event_id', 'quality' : 'quality_GT'}, axis=1)
+#print(df_ground_truth.shape[0]==inputs.shape[0])
+#print((df_ground_truth.event_id==inputs.wine_id).sum()==df_ground_truth.shape[0])
 
-gt_file_name = str('GT_Data_') + str(datetime.date.today())+str('.csv')
-gt_file_path_name = str('/mnt/data/{}/WineQualityData.csv'.format(os.environ.get('DOMINO_PROJECT_NAME')))
-gt_file_path = gt_file_path_name+gt_file_name
-df_ground_truth.to_csv(gt_file_path, index=False)
+#gt_file_name = str('GT_Data_') + str(datetime.date.today())+str('.csv')
+#gt_file_path_name = str('/mnt/data/{}/WineQualityData.csv'.format(os.environ.get('DOMINO_PROJECT_NAME')))
+#gt_file_path = gt_file_path_name+gt_file_name
+#df_ground_truth.to_csv(gt_file_path, index=False)
 
 def s3_upload(local_file, bucket):
     s3 = boto3.client('s3', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
@@ -107,7 +107,7 @@ def s3_upload(local_file, bucket):
         print("Credentials not available")
         return False
     
-s3_upload(gt_file_path, bucket)
+#s3_upload(gt_file_path, bucket)
 
-print('Data Uploaded to s3 bucket at s3://{}/{}'.format(bucket, gt_file_name))
+#print('Data Uploaded to s3 bucket at s3://{}/{}'.format(bucket, gt_file_name))
 print('Done!')
