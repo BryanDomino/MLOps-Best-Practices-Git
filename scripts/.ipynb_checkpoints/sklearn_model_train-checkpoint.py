@@ -43,6 +43,49 @@ y = df['quality'].astype('float64')
  
 # create a new MLFlow experiemnt
 mlflow.set_experiment(experiment_name=os.environ.get('DOMINO_PROJECT_NAME') + " " + os.environ.get('DOMINO_STARTING_USERNAME'))
+
+from sklearn.linear_model import LinearRegression
+from domino_data_capture.data_capture_client import DataCaptureClient
+import uuid
+import datetime
+
+features = ['density', 'volatile_acidity', 'chlorides', 'is_red', 'alcohol']
+
+target = ["quality"]
+
+# pred_client = PredictionClient(features, target)
+data_capture_client = DataCaptureClient(features, target)
+
+class WineQualityModel(mlflow.pyfunc.PythonModel):
+    def __init__(self,model):
+        self.model = model
+    
+    # Assumes model_input is a list of lists
+    def predict(self, context, model_input, params=None):
+        event_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        prediction = self.model.predict(model_input)
+        
+        if isinstance(model_input, pd.DataFrame):
+            model_input = model_input.values.tolist()
+        
+        for i in range(len(prediction)):
+            # Record eventID and current time
+            if len(model_input[i]) > 5:
+                event_id = model_input[i][5]
+                model_input_value = model_input[i].remove("wine_id")
+            else:
+                event_id = uuid.uuid4()
+                model_input_value = model_input[i]
+            
+            prediction_value = [prediction[i]]
+            
+            # Capture this prediction event so Domino can keep track
+            data_capture_client.capturePrediction(model_input_value, prediction_value, event_id=event_id,
+                                timestamp=event_time)
+        return prediction
+
+
+
  
 with mlflow.start_run():
     # Set MLFlow tag to differenciate the model approaches
@@ -57,6 +100,8 @@ with mlflow.start_run():
     print('Training model...')
     gbr = GradientBoostingRegressor(loss='ls',learning_rate = 0.15, n_estimators=75, criterion = 'mse')
     gbr.fit(X_train,y_train)
+
+    model = WineQualityModel(gbr)
  
     #Predict test set
     print('Evaluating model on test data...')
@@ -109,10 +154,15 @@ with mlflow.start_run():
     file = '/mnt/code/sklearn_gbm.pkl'
     pickle.dump(gbr, open(file, 'wb'))
     
-    mlflow.sklearn.log_model(gbr,
-                             artifact_path="gbr_model",
-                             signature=signature,
-                             )
+    #mlflow.sklearn.log_model(gbr,
+    #                         artifact_path="gbr_model",
+    #                         signature=signature,
+    #                         )
+    model_info = mlflow.pyfunc.log_model(
+        registered_model_name="sklearn-model", 
+        python_model = model, 
+        artifact_path="sklearn-model"
+    )
 mlflow.end_run()
 
 print('Script complete!')
