@@ -159,7 +159,7 @@ with mlflow.start_run():
     #                         signature=signature,
     #                         )
     model_info = mlflow.pyfunc.log_model(
-        registered_model_name="sklearn-model", 
+        #registered_model_name="sklearn-model", 
         python_model = model, 
         artifact_path="sklearn-model"
     )
