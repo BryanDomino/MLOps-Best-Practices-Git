@@ -70,10 +70,10 @@ for n in range(inputs.shape[0]):
         scoring_request = {'data' : setup_dict}
         
         
-    response = requests.post("https://demo2.dominodatalab.com:443/models/66e81d8e276d7e51a2b146f4/latest/model",
+    response = requests.post("https://demo2.dominodatalab.com:443/models/66eaf3e46a949b24c29557a0/latest/model",
     auth=(
-        "KTEc7Yx0K31feWe0CnEgIVPFf0YpManqCJYx8POjki72CaorwdTjCwO0jZujkj6L",
-        "KTEc7Yx0K31feWe0CnEgIVPFf0YpManqCJYx8POjki72CaorwdTjCwO0jZujkj6L"
+        "3jC9zxksv3mbCZ3mpxnPXstfmYFGdGJskU02OEubszs8r0UMgNuUQ8vxV5X736CT",
+        "3jC9zxksv3mbCZ3mpxnPXstfmYFGdGJskU02OEubszs8r0UMgNuUQ8vxV5X736CT"
     ),
         json=scoring_request
     )

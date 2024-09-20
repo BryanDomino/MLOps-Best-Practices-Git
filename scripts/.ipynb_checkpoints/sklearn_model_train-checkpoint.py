@@ -63,24 +63,22 @@ class WineQualityModel(mlflow.pyfunc.PythonModel):
     # Assumes model_input is a list of lists
     def predict(self, context, model_input, params=None):
         event_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        prediction = self.model.predict(model_input)
+
         
-        if isinstance(model_input, pd.DataFrame):
-            model_input = model_input.values.tolist()
+        print(model_input)
+        wine_id=model_input.pop("wine_id")
+        print(wine_id)
         
-        for i in range(len(prediction)):
-            # Record eventID and current time
-            if len(model_input[i]) > 5:
-                event_id = model_input[i][5]
-                model_input_value = model_input[i].remove("wine_id")
-            else:
-                event_id = uuid.uuid4()
-                model_input_value = model_input[i]
-            
-            prediction_value = [prediction[i]]
-            
+        model_input_value = [list(model_input.values())]
+        print(model_input_value)
+        prediction = self.model.predict(model_input_value)
+        print(prediction[0])
+        features = model_input_value[0]
+        print(features)
+        
+        
             # Capture this prediction event so Domino can keep track
-            data_capture_client.capturePrediction(model_input_value, prediction_value, event_id=event_id,
+        data_capture_client.capturePrediction(features, prediction, event_id=wine_id,
                                 timestamp=event_time)
         return prediction
 
@@ -101,7 +99,19 @@ with mlflow.start_run():
     gbr = GradientBoostingRegressor(loss='ls',learning_rate = 0.15, n_estimators=75, criterion = 'mse')
     gbr.fit(X_train,y_train)
 
+    sLength = len(X_test['density'])
+    X_test2 =  X_test.assign(wine_id=pd.Series(np.random.randn(sLength)).values)
+
     model = WineQualityModel(gbr)
+    data= {
+        "density": 0.99,
+        "volatile_acidity": 0.028,
+        "chlorides": 0.05,
+        "is_red": 0.1,
+        "alcohol": 11.1,
+        "wine_id": 12312312312.1
+      }
+    preds = model.predict(X_test2,data)
  
     #Predict test set
     print('Evaluating model on test data...')
